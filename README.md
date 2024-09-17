@@ -1,5 +1,8 @@
 # GO projects
 
+## tcp.go
+Implement the TCP/IP 3-Way Handshake using threads
+
 ## philosopher.go
 The Dining Philosophers is a well-known problem in Computer Science that concerns concurrency. At a dining round table, there are five philosophers who are supposed to have dinner. Philosophers are kind of special and while they have dinner, they either *eat* their food xor *think* about something. In order to be able to eat, they must get hold of two forks (the food is very special and cannot be handled with one fork). Unfortunately, there are only five forks at the table, each of them uniquely placed between two neighbouring philosophers (the table is round, there is exactly one fork between any two neighbouring philosophers -- each philosopher can only reach the two forks that are nearby). As a consequence, it is never the case that all philosophers can eat at the same time (max two at a time).  Eating is not limited by food quantity or stomach space (which are both assumed to be infinite). This problem is interesting because, depending on how they decide to pick the forks, the philosopher may reach a deadlock.
 
