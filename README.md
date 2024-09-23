@@ -1,5 +1,8 @@
 # GO projects
 
+## tcp2.go
+Implement the TCP/IP 3-Way Handshake using net package
+
 ## tcp.go
 Implement the TCP/IP 3-Way Handshake using threads
 
