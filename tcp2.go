@@ -23,7 +23,7 @@ func netClient() {
 	defer pipeClient.Close()
 	fmt.Println("Connected to server")
 
-	syn := 100 // syn is 100 for now
+	syn := 10  // syn is 10 for now
 	state := 0 // 0 = step 1 handshake , 1 = step 2 handshake, 3 = connected
 	for {
 		if state == 0 {
@@ -31,7 +31,7 @@ func netClient() {
 			arr := []byte{byte(syn), 0} // ack is null
 			_, err = pipeClient.Write(arr)
 			printError(err)
-			fmt.Println("Client (step 1) send success, syn:", syn)
+			fmt.Println("Client (step 1) send, syn:", syn)
 			state++
 		} else if state == 1 {
 			buf := make([]byte, 2)
@@ -45,7 +45,7 @@ func netClient() {
 				arr := []byte{byte(syn + 1), byte(seq + 1)} // ack is null
 				_, err = pipeClient.Write(arr)
 				printError(err)
-				fmt.Println("Client (step 2) send success, syn:", syn+1, " ack:", seq+1)
+				fmt.Println("Client (step 2) send, syn:", syn+1, " ack:", seq+1)
 				state++
 			} else {
 				fmt.Println("Client step 2 failed")
@@ -55,12 +55,6 @@ func netClient() {
 			time.Sleep(30 * time.Second)
 		}
 	}
-
-	// Read server's response (SYN-ACK equivalent)
-	/*buf := make([]byte, 1024)
-	n, err := pipeClient.Read(buf)
-	printError(err)
-	fmt.Printf("Received from server: %s\n", string(buf[:n]))*/
 }
 
 func netServer() {
@@ -90,12 +84,12 @@ func netServer() {
 				ack := int(buf[1])
 				fmt.Println("Server (step 1) received, syn:", seq, "ack:", ack)
 
-				syn = 3 //(ack + 100) * 3 // random for now
+				syn = (ack + 10) * 3 // random for now
 				ackx = seq + 1
 				arr := []byte{byte(syn), byte(ackx)} // ack is null
 				_, err = pipeServer.Write(arr)
 				printError(err)
-				fmt.Println("Server (step 1) send success, syn:", syn, "ack:", ackx)
+				fmt.Println("Server (step 1) send, syn:", syn, "ack:", ackx)
 				state++
 			} else if state == 1 {
 				time.Sleep(1 * time.Second) // Wait for the server to start
@@ -105,7 +99,6 @@ func netServer() {
 				seq := int(buf[0])
 				ack := int(buf[1])
 				fmt.Println("Server (step 2) received, syn:", seq, "ack:", ack)
-				fmt.Println(syn, ackx)
 				if seq == ackx && ack == syn+1 {
 					fmt.Println("Server step 2 success")
 					state++
@@ -115,20 +108,9 @@ func netServer() {
 				time.Sleep(30 * time.Second)
 			}
 		}
-		/*'
-
-		buf := make([]byte, 2)
-		_, err = conn.Read(buf)
-		printError(err)
-		fmt.Printf("Received from client: ", buf[0], buf[1])
-
-		// Simulate server response
-		response := "ACK from server"
-		_, err = conn.Write([]byte(response))
-		printError(err)
-		fmt.Println("Sent ACK to client")*/
 	}
 }
+
 func printError(err error) {
 	if err != nil {
 		fmt.Println("Error:", err)
